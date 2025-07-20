@@ -1,4 +1,9 @@
-﻿namespace Advance {
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace Advance {
 
     /// <summary>
     /// Represents the Board in Advance Game.

@@ -1,4 +1,9 @@
-﻿namespace Advance
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace Advance
 {
     /// <summary>
     /// Represents Builder object, one of the Pieces.
@@ -85,7 +90,7 @@
         /// </summary>
         /// <param name="newSquare">New square coordinates.</param>
         /// <returns>Boolean true if Piece is allowed to build wall on that square.</returns>
-        """
+        /*
         public virtual bool CanBuildWall(Square newSquare)
         {
             //Similar to its move, Builder can build wall on any of the 8 adjoining squares
@@ -107,7 +112,7 @@
             newSquare.Place(wall);
             return true;
         }
-        """
+        */
 
         
 

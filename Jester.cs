@@ -1,4 +1,9 @@
-﻿namespace Advance
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace Advance
 {   
     /// <summary>
     /// Represents Jester object, one of the Pieces.
@@ -84,7 +89,7 @@
             return false;
         }
 
-        """
+        /*
         public override bool CanAttack(Square newSquare)
         {
             if (Square == null) throw new Exception("Cannot Attack with piece that is off the board");
@@ -105,7 +110,7 @@
 
             return false;
         }
-        """
+        */
 
         /// <summary>
         /// Attacks a target square, causing the target piece to defect.

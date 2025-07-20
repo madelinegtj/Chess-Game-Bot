@@ -1,4 +1,9 @@
-﻿namespace Advance {
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace Advance {
 
     /// <summary>
     /// Represents the Army of pieces.
@@ -50,7 +55,7 @@
             //lack moves downwards; White moves upwards.
             int direction = player.Direction;
 
-            """
+            /*
             try
             {
                 //Initialize zombie pieces on the board
@@ -77,7 +82,7 @@
             {
                 Console.WriteLine(e.ToString());
             }
-            """
+            */
 
             
         }

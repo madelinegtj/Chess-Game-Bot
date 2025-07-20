@@ -1,4 +1,9 @@
-﻿namespace Advance 
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace Advance 
 {
     /// <summary>
     /// Represents Sentinel object, one of the Pieces.
@@ -19,8 +24,9 @@
         /// <param name="newSquare">New square coordinates.</param>
         /// <returns>Boolean true if Sentinel is allowed to move to the new square.</returns>
         public override bool CanMoveTo(Square newSquare) {
-            if (newSquare.Occupant is Wall)
+            if (newSquare == null)
                 return false;
+            if (newSquare == Square) return false;
 
             int dy = newSquare.Row - Square.Row;
             int dx = newSquare.Col - Square.Col;
@@ -31,7 +37,7 @@
 
             //Sentinels can move two squares in one cardinal direction and one square in a perpendicular direction
             //Can jump over any intervening pieces and walls
-            return ((dy == 2 && dx == 1) || (dy == 1 && dx == 2));
+            return dx != 0 && dy != 0 && dx + dy == 3;
         }
 
         /// <summary>
@@ -45,7 +51,28 @@
             return CanMoveTo(newSquare);
         }
 
-        //TODO Sentinel can protect friendly pieces on 4 adjoining squares
+        /// <summary>
+        /// Enumerates the squares that are protected by this Sentinel piece.
+        /// </summary>
+        private IEnumerable<Square> ProtectedSquares
+        {
+            get
+            {
+                return Square.AdjacentSquares;
+            }
+        }
+
+        /// <summary>
+        /// Determines if a target square is protected by this Sentinel piece.
+        /// </summary>
+        /// <param name="targetSquare">The target square to check.</param>
+        /// <returns>True if the target square is protected, false otherwise.</returns>
+        public bool IsProtected(Square targetSquare)
+        {
+            //Sentinel can protect friendly pieces on 4 adjoining squares
+            if (targetSquare == null) throw new ArgumentNullException("Target square cannot be null");
+            return ProtectedSquares.Any(square => square.Equals(targetSquare));
+        }
 
         /// <summary>
         /// Gets Sentinel symbol/icon lettercase based on its color.

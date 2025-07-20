@@ -1,4 +1,9 @@
-﻿namespace Advance
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace Advance
 {
     /// <summary>
     /// Represents an action to destroy a wall in the game. Inherits from the Action class.

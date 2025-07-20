@@ -142,6 +142,11 @@
 ### 1. Colour
 #### represents the colour of the piece. It is an enum created to differ two players in the game; one is Black, and another is White.
 
+### How to pass arguments : 
+
+```
+.\Program.exe [color] [test/input file path] [output file path].txt
+```
 
 Specifications that are not implemented yet:
 -Choosing best moves (currently, moves are picked randomly)

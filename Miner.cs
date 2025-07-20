@@ -1,4 +1,9 @@
-﻿namespace Advance
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace Advance
 {
     /// <summary>
     /// Represents Miner object, one of the Pieces.
@@ -51,14 +56,14 @@
         /// <returns>Boolean true if Miner is allowed to capture the Piece on the new square.</returns>
         public override bool CanAttack(Square newSquare)
         {
-            """
+            /*
             //If Piece is a Wall, Miner can capture it
             if (CanMoveTo(newSquare) && (newSquare.Occupant is Wall))
             {
                 newSquare.Remove();
                 return true;
             }
-            """
+            */
 
             //Similar to its move, Miner can attack in one of the 4 cardinal directions
             return CanMoveTo(newSquare);

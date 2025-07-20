@@ -1,4 +1,9 @@
-﻿namespace Advance {
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace Advance {
 
     /// <summary>
     /// Represents each of the squares object on the board.
@@ -72,6 +77,14 @@
         }
 
         /// <summary>
+        /// Determines whether the square contains a wall.
+        /// </summary>
+        public bool ContainsWall
+        {
+            get { return Occupant.Player == null; }
+        }
+
+        /// <summary>
         /// Places a piece on a particular square.
         /// </summary>
         /// <param name="piece">The Piece that is going to be placed.</param>
@@ -88,36 +101,158 @@
         }
 
         /// <summary>
-        /// Checks if a Piece is threatened.
+        /// Gets the squares adjacent to this square in the four cardinal directions.
         /// </summary>
-        /// <returns>Boolean true if there's any threatening pieces.</returns>
-        public bool IsThreatened {
-            get {
-                return ThreateningPieces.Count() != 0;
+        public IEnumerable<Square> AdjacentSquares
+        {
+            get
+            {
+                List<Square> adjacentSquares = new List<Square>();
+
+                // Square above
+                if (Row - 1 >= 0)
+                {
+                    Square squareAbove = Board.Get(Row - 1, Col);
+                    adjacentSquares.Add(squareAbove);
+                }
+
+                // Square below
+                if (Row + 1 < Board.Size)
+                {
+                    Square squareBelow = Board.Get(Row + 1, Col);
+                    adjacentSquares.Add(squareBelow);
+                }
+
+                // Left square
+                if (Col - 1 >= 0)
+                {
+                    Square squareLeft = Board.Get(Row, Col - 1);
+                    adjacentSquares.Add(squareLeft);
+                }
+
+                // Right square
+                if (Col + 1 < Board.Size)
+                {
+                    Square squareRight = Board.Get(Row, Col + 1);
+                    adjacentSquares.Add(squareRight);
+                }
+
+                return adjacentSquares;
             }
         }
+
+        /// <summary>
+        /// Gets all squares neighboring this square, including diagonals.
+        /// </summary>
+        public IEnumerable<Square> NeighbourSquares
+        {
+            get
+            {
+                List<Square> neighbourSquares = new List<Square>();
+
+                // Square above
+                if (Row - 1 >= 0)
+                {
+                    Square squareAbove = Board.Get(Row - 1, Col);
+                    neighbourSquares.Add(squareAbove);
+                }
+
+                // Square below
+                if (Row + 1 < Board.Size)
+                {
+                    Square squareBelow = Board.Get(Row + 1, Col);
+                    neighbourSquares.Add(squareBelow);
+                }
+
+                // Left square
+                if (Col - 1 >= 0)
+                {
+                    Square squareLeft = Board.Get(Row, Col - 1);
+                    neighbourSquares.Add(squareLeft);
+                }
+
+                // Right square
+                if (Col + 1 < Board.Size)
+                {
+                    Square squareRight = Board.Get(Row, Col + 1);
+                    neighbourSquares.Add(squareRight);
+                }
+
+                // Top left square
+                if (Row - 1 >= 0 && Col - 1 >= 0)
+                {
+                    Square squareTopLeft = Board.Get(Row - 1, Col - 1);
+                    neighbourSquares.Add(squareTopLeft);
+                }
+
+                // Top right square
+                if (Row - 1 >= 0 && Col + 1 < Board.Size)
+                {
+                    Square squareTopRight = Board.Get(Row - 1, Col + 1);
+                    neighbourSquares.Add(squareTopRight);
+                }
+
+                // Bottom left square
+                if (Row + 1 < Board.Size && Col - 1 >= 0)
+                {
+                    Square squareBottomLeft = Board.Get(Row + 1, Col - 1);
+                    neighbourSquares.Add(squareBottomLeft);
+                }
+
+                // Bottom right square
+                if (Row + 1 < Board.Size && Col + 1 < Board.Size)
+                {
+                    Square squareBottomRight = Board.Get(Row + 1, Col + 1);
+                    neighbourSquares.Add(squareBottomRight);
+                }
+
+                return neighbourSquares;
+            }
+        }
+
 
         /// <summary>
         /// Lists all threatening pieces that can attack a particular Piece.
         /// </summary>
         /// <returns>Threatining Pieces in a list.</returns>
-        public IEnumerable<Piece> ThreateningPieces {
-            get {
-                //Initialize a new list for threatening pieces
-                List<Piece> threateningPieces = new List<Piece>();
+        public IEnumerable<Piece> ThreateningPieces(Player player)
+        {
+            List<Piece> threateningPieces = new List<Piece>();
+            foreach (var piece in player.Army.Pieces)
+            {
+                if (!piece.OnBoard) continue;
 
-                //Check each square's occupant piece
-                //and add the Piece to the list if it can be threatening
-                foreach ( Square square in Board.Squares) {
-                    Piece? p = square.Occupant;
-                    if ( p != null && p.CanAttack(this)) 
+                if (piece is General)
+                {
+                    // For General, check only the neighbour squares, not using IsThreatenedBy
+                    if (piece.Square.NeighbourSquares.Any<Square>(square => square.Equals(this)))
                     {
-                        threateningPieces.Add(p);
+                        threateningPieces.Add(piece);
                     }
                 }
-                return threateningPieces;
+                else
+                {
+                    // If a piece can attack this square, it's threatened
+                    if (piece.CanAttack(this))
+                    {
+                        threateningPieces.Add(piece);
+                    }
+                }
+
             }
+            return threateningPieces;
         }
+
+        /// <summary>
+        /// Checks if a Piece is threatened.
+        /// </summary>
+        /// <returns>Boolean true if there's any threatening pieces.</returns>
+        public bool IsThreatenedBy(Player player)
+        {
+            return ThreateningPieces(player).Count() != 0;
+        }
+
+        
 
         /// <summary>
         /// Converts and print value into a String sentence.

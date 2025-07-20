@@ -1,4 +1,9 @@
-﻿namespace Advance 
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace Advance 
 {
     /// <summary>
     /// Represents Zombie object, one of the Pieces.
@@ -32,14 +37,15 @@
             {
                 return false;
             }
-
             if ((Player.Colour == Colour.Black) && (newSquare.Row < Square.Row))
             {
                 return false;
             }
 
+            if (rowDiff != Player.Direction) return false;
+
             // Check if the new square is adjacent to the current square
-            if (rowDiff == 1 && colDiff <= 1) return true;
+            if (colDiff == 0 || colDiff == 1 || colDiff == -1) return true;
 
             return false;
         }
@@ -53,10 +59,12 @@
             if (newSquare.Occupant is Wall)
                 return false;
 
+            if (Square == null) throw new Exception("Cannot attack with piece that is off the board");
+
             //Absolute value of dx and dy
             int rowDiff = newSquare.Row - Square.Row;
             int colDiff = newSquare.Col - Square.Col;
-
+            /*
             int absRowDiff = Math.Abs(rowDiff);
             int absColDiff = Math.Abs(colDiff);
 
@@ -104,6 +112,23 @@
                     }
                 }
             }
+            */
+
+            // Check for regular move
+            if (rowDiff == Player.Direction && (colDiff == 0 || colDiff == 1 || colDiff == -1))
+                return true;
+
+            // Check for Leaping attack
+            if (rowDiff == 2 * Player.Direction && (colDiff == 0 || colDiff == -2 || colDiff == 2))
+            {
+
+                Square immediateSquare = Square.Board.Get(Square.Row + Player.Direction, Square.Col + colDiff / 2);
+                if (!immediateSquare.IsOccupied)
+                {
+                    return true;
+                }
+            }
+
             return false;
             
         }

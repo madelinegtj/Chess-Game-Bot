@@ -1,4 +1,9 @@
-﻿namespace Advance;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace Advance;
 
 /// <summary>
 /// Main Program of our Advance Game Bot.
