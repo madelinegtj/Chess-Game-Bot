@@ -14,21 +14,28 @@
         }
 
         /// <summary>
+        /// Gets a value indicating whether the builder requires an enemy to attack.
+        /// Builders can attack walls directly without requiring an enemy piece.
+        /// </summary>
+        public override bool RequiresEnemyToAttack { get { return false; } }
+
+        /// <summary>
         /// Checks for Builder's legal movements.
         /// </summary>
         /// <param name="newSquare">New square coordinates.</param>
         /// <returns>Boolean true if Builder is allowed to move to the new square.</returns>
         public override bool CanMoveTo(Square newSquare)
         {
-            if (newSquare.Occupant is Wall)
-                return false;
+            if (Square == null) throw new Exception("Cannot Move with piece that is off the board");
 
-            int dy = newSquare.Row - Square.Row;
-            int dx = newSquare.Col - Square.Col;
+            int dx = newSquare.Row - Square.Row;
+            int dy = newSquare.Col - Square.Col;
 
             //Absolute value of dx and dy
             if (dx < 0) dx = -dx;
             if (dy < 0) dy = -dy;
+
+            if (dx == 0 && dy == 0) return false;
 
             //Builder can move on any of the 8 adjoining squares
             return (dy <= 1 && dx <= 1);
@@ -41,8 +48,36 @@
         /// <returns>Boolean true if Builder is allowed to capture the Piece on the new square.</returns>
         public override bool CanAttack(Square newSquare)
         {
-            //Similar to its move, Builder can capture on any of the 8 adjoining squares
-            return CanMoveTo(newSquare);
+            if (Square == null) throw new Exception("Cannot attack with piece that is off the board");
+            if (Square == newSquare) return false;
+
+            int dx = newSquare.Row - Square.Row;
+            int dy = newSquare.Col - Square.Col;
+
+            if (dx < 0) dx = -dx;
+            if (dy < 0) dy = -dy;
+
+            if (dx == 0 && dy == 0) return false;
+
+            return dx <= 1 && dy <= 1;
+        }
+
+        /// <summary>
+        /// Attacks a square, removing any piece occupying it.
+        /// </summary>
+        /// <param name="targetSquare">The target square to attack.</param>
+        /// <returns><c>true</c> if the attack was successful; otherwise, <c>false</c>.</returns>
+        public override bool Attack(Square targetSquare)
+        {
+
+            if (!CanAttack(targetSquare)) return false;
+            if (targetSquare.IsFree) return false;
+            if (targetSquare == Square) return false;
+
+            targetSquare.Occupant?.LeaveBoard();
+            LeaveBoard();
+            EnterBoard(targetSquare);
+            return true;
         }
         
         /// <summary>
@@ -50,11 +85,13 @@
         /// </summary>
         /// <param name="newSquare">New square coordinates.</param>
         /// <returns>Boolean true if Piece is allowed to build wall on that square.</returns>
+        """
         public virtual bool CanBuildWall(Square newSquare)
         {
             //Similar to its move, Builder can build wall on any of the 8 adjoining squares
             return CanMoveTo(newSquare);
         }
+        
 
         /// <summary>
         /// Builds a wall, only applicable for Builder.
@@ -70,6 +107,7 @@
             newSquare.Place(wall);
             return true;
         }
+        """
 
         
 

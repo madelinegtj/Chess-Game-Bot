@@ -19,6 +19,24 @@
         private List<Piece> pieces = new List<Piece>();
 
         /// <summary>
+        /// Adds a piece to the army.
+        /// </summary>
+        /// <param name="piece">The piece to add.</param>
+        public void AddPiece(Piece defected)
+        {
+            pieces.Add(defected);
+        }
+
+        /// <summary>
+        /// Removes a piece from the army.
+        /// </summary>
+        /// <param name="piece">The piece to remove.</param>
+        public void RemovePiece(Piece defected)
+        {
+            pieces.Remove(defected);
+        }
+
+        /// <summary>
         /// Defines Army object constructor for instantiation.
         /// </summary>
         /// <param name="player">Player white or black.</param>
@@ -32,6 +50,7 @@
             //lack moves downwards; White moves upwards.
             int direction = player.Direction;
 
+            """
             try
             {
                 //Initialize zombie pieces on the board
@@ -58,6 +77,7 @@
             {
                 Console.WriteLine(e.ToString());
             }
+            """
 
             
         }
@@ -99,28 +119,29 @@
                 case 'z':
                     newPiece = new Zombie(Player, initialSquare);
                     break;
-                case 's':
-                    newPiece = new Sentinel(Player, initialSquare);
-                    break;
                 case 'b':
                     newPiece = new Builder(Player, initialSquare);
-                    break;
-                case 'd':
-                    newPiece = new Dragon(Player, initialSquare);
                     break;
                 case 'm':
                     newPiece = new Miner(Player, initialSquare);
                     break;
-                case 'g':
-                    newPiece = new General(Player, initialSquare);
+                case 'j':
+                    newPiece = new Jester(Player, initialSquare);
+                    break;
+                case 's':
+                    newPiece = new Sentinel(Player, initialSquare);
                     break;
                 case 'c':
                     newPiece = new Catapult(Player, initialSquare);
                     break;
-                case '#':
-                    newPiece = new Wall(Player, initialSquare);
+                case 'd':
+                    newPiece = new Dragon(Player, initialSquare);
                     break;
-                case '.':
+                case 'g':
+                    newPiece = new General(Player, initialSquare);
+                    break;
+                case '#':
+                    newPiece = new Wall(null, initialSquare);
                     break;
                 default:
                     throw new ArgumentException("Unrecognised icon");
