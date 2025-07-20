@@ -1,4 +1,4 @@
-# Chess-Game-Bot
+# Chess Game Bot (Object Oriented Programming)
 
 
 ## Program Overview:
