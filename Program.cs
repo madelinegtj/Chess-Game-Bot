@@ -99,7 +99,10 @@ public class Program {
     {
         //Decide which player's turn it is, and choose one of its possible moves
         Player currentPlayer = colour == Colour.White ? game.White : game.Black;
-        Advance.Action nextMove = currentPlayer.ChooseMove();
+        AI gameBot = new AI(game, currentPlayer);
+
+        //Action nextMove = currentPlayer.ChooseMove();
+        Action nextMove = gameBot.ChooseBestAction();
 
         //and play one move for it if there's possible move
         if (nextMove != null) {

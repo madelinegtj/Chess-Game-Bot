@@ -20,6 +20,8 @@ public class Game {
     /// </summary>
     public Board Board { get; }
 
+    public List<Wall> walls = new List<Wall>();
+
     /// <summary>
     /// Defines Game object constructor that has board and players as properties.
     /// </summary>
@@ -27,6 +29,17 @@ public class Game {
         Board = new Board();
         White = new Player(Colour.White, this);
         Black = new Player(Colour.Black, this);
+    }
+
+    /// <summary>
+    /// Returns a string that represents the current game state.
+    /// </summary>
+    /// <returns>A string that represents the current game state.</returns>
+    public override string ToString()
+    {
+        StringWriter writer = new StringWriter();
+        Write(writer);
+        return writer.ToString();
     }
 
     /// <summary>

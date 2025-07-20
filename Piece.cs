@@ -8,11 +8,16 @@
         /// <summary>
         /// Gets the Player object.
         /// </summary>
-        public Player Player { get; }
+        public Player Player { get; private set; }
         /// <summary>
         /// Gets and privately sets the Square object.
         /// </summary>
         public Square Square { get; private set; }
+
+        /// <summary>
+        /// Indicates whether this piece requires an enemy to be present to perform an attack. The default is true.
+        /// </summary>
+        public virtual bool RequiresEnemyToAttack { get { return true; } }
 
         /// <summary>
         /// Defines Piece object constructor for instantiation.
@@ -21,17 +26,7 @@
         /// <param name="initialSquare">Initial square's coordinates of the Piece.</param>
         public Piece(Player player, Square initialSquare) {
             Player = player;
-            Square = initialSquare;
-
-            //If initialSquare is given, then we can place the Piece on it.
-            if (initialSquare != null)
-            {
-                 initialSquare.Place(this);
-            }
-            else
-            {
-                throw new Exception("Piece is not on the board");
-            }
+            EnterBoard(initialSquare);
             
         }
 
@@ -41,6 +36,17 @@
         /// <returns>Parsed text.</returns>
         public override string ToString() {
             return $"{Player.Colour} {GetType().Name} at {Square.Row}, {Square.Col}";
+        }
+
+        /// <summary>
+        /// Places this piece on the board at the specified square.
+        /// </summary>
+        /// <param name="square">The square to place this piece on.</param>
+        public virtual void EnterBoard(Square square)
+        {
+            if (OnBoard) throw new Exception("Piece is already on the board");
+            square.Place(this);
+            Square = square;
         }
 
         /// <summary>
@@ -74,13 +80,12 @@
             // and check if the new square is occupied yet
             if (newSquare.IsOccupied) return false;
             // Check if the initial square is null
-            if (Square == null) throw new Exception("Cannot move piece that is off the board");
+            //if (Square == null) throw new Exception("Cannot move piece that is off the board");
 
             // Perform the movement by placing the piece to the new square
             LeaveBoard();
-            newSquare.Place(this);
-            // Change the Piece's square position to a new one
-            Square = newSquare;
+            EnterBoard(newSquare);
+
             //EnterBoard(newSquare);
             return true;
         }
@@ -105,25 +110,13 @@
             if (targetSquare.IsFree) return false;
             if (targetSquare == Square) return false;
             // Check if the initial square is null
-            if (Square == null) throw new Exception("Cannot attack with piece that is off the board");
+            //if (Square == null) throw new Exception("Cannot attack with piece that is off the board");
 
             // Perform the attack by removing the enemy piece from the board
             targetSquare.Occupant?.LeaveBoard();
 
-            // Catapult can attack without moving
-            if(Square.Occupant is not Catapult)
-            {
-                // Move the attacking piece to the target square
-                LeaveBoard();
-                targetSquare.Place(this);
-                // Change the Piece's square position to its current position
-                Square = targetSquare;
-            }
-            else
-            {
-                return true;
-            }
-            
+            LeaveBoard();
+            EnterBoard(targetSquare);
             return true;
         }
 
@@ -138,14 +131,22 @@
         /// Change the color of a Piece to its opponent color.
         /// </summary>
         internal void Defect() {
-            // TODO; applicable for Jester
-            // Placeholder for pieces that have to change sides
-
             // p.Defect() should cause p to change sides (moving to the opponent's army
             // and adopting the opponent as the Player).
+            if (Player == null) throw new Exception("Piece cannot be defected from unknown player.");
 
-            // Note that Defect() is its own inverse -- calling it twice should put the
-            // piece back in the original army.
+            Player? opponent = Player.Opponent;
+
+            if (opponent == null) throw new Exception("Player has no opponent.");
+
+            // Remove piece from original player
+            Player.Army.RemovePiece(this);
+
+            // Change player of current piece
+            Player = opponent;
+
+            // Add to opponent's army
+            opponent.Army.AddPiece(this);
         }
 
         /// <summary>

@@ -1,4 +1,10 @@
-﻿namespace Advance
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Advance
 {
     /// <summary>
     /// Represents General object, one of the Pieces.
@@ -20,24 +26,9 @@
         /// <returns>Boolean true if General is allowed to move to the new square.</returns>
         public override bool CanMoveTo(Square newSquare)
         {
-            if (newSquare.Occupant is Wall)
-                return false;
-
-            int dy = newSquare.Row - Square.Row;
-            int dx = newSquare.Col - Square.Col;
-
-            //Absolute value of dx and dy
-            if (dx < 0) dx = -dx;
-            if (dy < 0) dy = -dy;
-
-            /*
-            if (Square.IsThreatened)
-            {
-                //TODO Do sth when General is threatened
-            }*/
-
-            //General can move on any of the 8 adjoining squares, like the Builder.
-            return (dy <= 1 && dx <= 1);
+            bool success = Square.NeighbourSquares.Any(square => square.Equals(newSquare))
+                          && !newSquare.IsThreatenedBy(Player.Opponent);
+            return success;
         }
 
         /// <summary>
@@ -48,7 +39,9 @@
         public override bool CanAttack(Square newSquare)
         {
             //Similar to its move, General can capture on any of the 8 adjoining squares
-            return CanMoveTo(newSquare);
+            bool success = Square.NeighbourSquares.Any(square => square.Equals(newSquare))
+                          && !newSquare.IsThreatenedBy(Player.Opponent);
+            return success;
         }
 
         /// <summary>
