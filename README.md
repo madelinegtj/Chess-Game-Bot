@@ -2,10 +2,10 @@
 
 
 ## Program Overview:
-### At this point, this Advance Game bot is currently capable of doing basic moves, that is checking for legal moves and attacks for each piece. that will read board state from an input file, decide which legal actions to do, execute a move or attack where possible.
+#### At this point, this Advance Game bot is currently capable of doing basic moves, that is checking for legal moves and attacks for each piece. that will read board state from an input file, decide which legal actions to do, execute a move or attack where possible.
 
 ## Classes and objects:
-## 1. Program
+### 1. Program
 ```
    Overview: The main program of our game which shows the outline of our game: Parse Args -> Load/Read board -> Play one move -> Save/Write board
    Methods:
@@ -19,7 +19,7 @@
      Uses StreamWriter() to write board state into the output file.
 ```
 
-## 2. Action
+### 2. Action
 ```
    Overview: Deals with actions (move and attack) in the game. It keeps track of who the current player and the target player is, and the score after an action is executed.
    Methods:
@@ -32,7 +32,7 @@
 	   Contains common behaviour when making an attack Action.
 ```
 
-## 3. Army
+### 3. Army
 ```
    Overview: Deals with all types of pieces as a whole, therefore called as army. Defines the default position of each piece and their symbols.
    Methods:
@@ -42,7 +42,7 @@
      Recruits Piece to the Board based on their icon given in board state. 
 ```
 
-## 4. Board
+### 4. Board
 ```
    Overview: Deals with everything about the board including the size of the board, and the cells/squares on the board.
    Methods:
@@ -52,7 +52,7 @@
      Gets a square from the specified row and column number.
 ```
 
-## 5. Player
+### 5. Player
 ```
    Overview: Contains identity, state, and behaviour of the current player, such as its direction(upwards or downwards), opponent, and possible moves. Players are differed by their color.
    Methods:
@@ -66,7 +66,7 @@
      Iterate through each pieces and all squares on the board to collect all the possible attacks.
 ```
 
-## 6. Square
+### 6. Square
 ```
    Overview: Contains the state and behaviour of the squares; is the square free or occupied, who the square occupant is, and if it is threatened.
    Methods:
@@ -76,7 +76,7 @@
      Removes the occupant piece from the square.
 ```
 
-## 7. Game
+### 7. Game
 ```
    Overview: Deals with the overall game, such as the initial board state and the outcome board state.
    Methods:
@@ -88,7 +88,7 @@
      Clears the text, i.e. removed all the pieces.
 ```
 
-## 8. Piece
+### 8. Piece
 ```
    Overview: Contains common methods and behaviours of all types of the pieces.
    Methods:
